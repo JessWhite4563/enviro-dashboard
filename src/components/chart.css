@@ -1,0 +1,16 @@
+
+.chartContainer {
+    display: flex;
+    border: blueviolet solid 2px;
+    border-radius: 10px;
+    flex-direction: column;
+
+    .header{
+        font-size: 22px;
+        padding:8px;
+    }
+}
+
+.chartNoData {
+
+}

@@ -1,0 +1,9 @@
+body {
+  font-family: system-ui;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
