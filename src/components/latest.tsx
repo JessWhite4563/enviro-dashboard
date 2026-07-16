@@ -1,5 +1,8 @@
+import {useState, useEffect} from 'react';
 import type {sensorData} from "../App.tsx";
+import {calculateDifference} from "../utils/time-display.ts";
 import "./latest.css";
+
 
 interface LatestProps {
     data: sensorData[];
@@ -8,6 +11,14 @@ interface LatestProps {
 
 const Latest = (props: LatestProps) => {
 
+    const [time, setTime] = useState(Date.now());
+
+    useEffect(() => {
+        const interval = setInterval(() => setTime(Date.now()), 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
     const line = (lineData: sensorData) => {
         const lastPoll = lineData.pings.length > 0 ? lineData.pings[0] : null;
@@ -32,7 +43,7 @@ const Latest = (props: LatestProps) => {
                         </div>
                         <div className={'line'}>
                             <span className={'lineTitle'}>Last Updated :</span>
-                            <span className={'lineContent'}>{lastPoll.datetime}</span>
+                            <span className={'lineContent'}>{calculateDifference(lastPoll.datetime)}</span>
                         </div>
                     </div> :
                     <div>none</div>}

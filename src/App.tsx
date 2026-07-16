@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import Latest from "./components/latest.tsx";
 import "./styles.css";
 import Chart from "./components/chart.tsx";
@@ -23,17 +23,46 @@ export const App = () => {
         if (data) setSelectedSensor(data.find((sensor) => sensor.name === name));
     }
 
-    useEffect(() => {
-        fetch('http://192.168.1.58:3000/get-sensors/')
-            .then((response) => response.json())
-            .then((data) => {
-                setData(data);
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
-    }, []);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const isFetching = useRef(false); // Track in-progress requests
 
+    const fetchData = async () => {
+        if (isFetching.current) return; // ✅ Abort if a request is already running
+        isFetching.current = true; // Mark request as in-progress
+        setLoading(true);
+
+        try {
+            const response = await fetch('http://192.168.1.58:3000/get-sensors/');
+            if (!response.ok) throw new Error('Failed to fetch data');
+            const newData = await response.json();
+            setData(newData); // Update state
+        } catch (err) {
+            // @ts-ignore
+            setError(err.message);
+        } finally {
+            setLoading(false);
+            isFetching.current = false; // Reset flag when done
+        }
+    };
+
+    useEffect(() => {
+        // ✅ Wrap async logic in a synchronous function
+        const fetchDataInterval = () => {
+            fetchData().catch((err) => {
+                console.error('API call failed:', err); // Handle errors explicitly
+            });
+        };
+
+        // Start interval: run fetchDataInterval every 60 seconds
+        const intervalId = setInterval(fetchDataInterval, 30000);
+
+        // Fetch data immediately on mount
+        fetchDataInterval();
+
+        // ✅ Cleanup: Clear interval when component unmounts
+        return () => clearInterval(intervalId);
+    }, []); // Empty deps: interval is set once on mount
 
     return (
         <div className={'mainContainer'}>
