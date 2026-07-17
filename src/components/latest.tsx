@@ -11,15 +11,6 @@ interface LatestProps {
 
 const Latest = (props: LatestProps) => {
 
-    const [time, setTime] = useState(Date.now());
-
-    useEffect(() => {
-        const interval = setInterval(() => setTime(Date.now()), 1000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
-
     const line = (lineData: sensorData) => {
         const lastPoll = lineData.pings.length > 0 ? lineData.pings[0] : null;
         return (

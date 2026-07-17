@@ -3,11 +3,12 @@ import Latest from "./components/latest.tsx";
 import "./styles.css";
 import Chart from "./components/chart.tsx";
 
-interface sensorPing {
+export interface sensorPing {
     temperature: number;
     humidity: number;
     pressure: number;
     datetime: string;
+    displayTime?: string;
 }
 export interface sensorData {
     name: string;
@@ -19,7 +20,6 @@ export const App = () => {
     const [selectedSensor, setSelectedSensor] = useState<sensorData | undefined>(undefined);
 
     const handleSensorSelected = (name: string) => {
-        console.log(name);
         if (data) setSelectedSensor(data.find((sensor) => sensor.name === name));
     }
 
