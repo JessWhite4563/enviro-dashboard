@@ -13,14 +13,11 @@ const Chart = (props: ChartProps) => {
     const filterData = (data: sensorData) => {
         let filtered: sensorPing[] = [];
         if (data) {
-            filtered = data.pings.filter((ping :sensorPing, index: number) => {
+            filtered = data.pings.filter((_ping :sensorPing, index: number) => {
                 return !(index % 12);
             }).map((ping) => {
-                const m = moment(ping.datetime).minutes();
-                const ms = m > 9 ? m : `0${m}`;
-                const h = moment(ping.datetime).hours();
-                const hs = h > 9 ? h : `0${h}`;
-                ping.displayTime = `${hs}:${ms}`;
+                const dt = moment.utc(ping.datetime);
+                ping.displayTime = dt.local().format('HH:mm')
                 return ping;
             }).reverse();
         }
