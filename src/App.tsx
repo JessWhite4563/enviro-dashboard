@@ -67,7 +67,7 @@ export const App = () => {
     return (
         <div className={'mainContainer'}>
             {data && <Latest data={data} handleSensorSelect={handleSensorSelected} />}
-            {<Chart data={selectedSensor} />}
+            {<Chart inputData={selectedSensor} />}
         </div>
     )
 }
