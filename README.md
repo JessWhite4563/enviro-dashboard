@@ -25,4 +25,4 @@ A simple dashboard to read a restful api response from a local server
     ]
 
 ## Example
-![alt text](example.jpg)
+![example](example.jpg)
